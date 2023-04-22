@@ -12,8 +12,8 @@ class GraphSearch
 public:
 	GraphSearch();
 	GraphSearch(Genre* rootGenre);
-	int BreadthFirstSearch(string targetGenre);
-	int DepthFirstSearch(string targetGenre);
+	int breadthFirstSearch(string targetGenre);
+	int depthFirstSearch(string targetGenre);
 	
 private:
 	Genre rootGenre;

@@ -3,26 +3,28 @@
 #include <iostream>;
 #include <iomanip>;
 #include <vector>;
-#include <queue>;
-#include <stack>;
+#include <map>;
 
 #include "Genre.h"
 
 Genre::Genre() {
 	this->genre = "default";
 	this->visited = false;
+	this->popularity = 0;
 }
 
 Genre::Genre(string genre) {
 	this->genre = genre;
 	correlationMap[this->genre] = 0;
+	this->popularity = 0;
 }
 
 void Genre::AddCorrelation(string linkedGenre) {
 	correlationMap[linkedGenre] = correlationMap[linkedGenre] + 1;
+	this->popularity++;
 }
 
-void Genre::GenerateCorrelationFactors() {
+void Genre::GenerateCorrelationFactors(map<string, Genre> &initializedGenres) {
 	//purely for flavor, doesn't really change much asides from eliminating its own genre from the pool which could be doen without converting ints to floats, also finds a given genres popularity
 	cout << setprecision(5) << endl;
 	auto iter = this->correlationMap.begin();
@@ -33,11 +35,12 @@ void Genre::GenerateCorrelationFactors() {
 		}
 		iter++;
 	}
-	this->popularity = sum;
+	sum;
 	iter = this->correlationMap.begin();
 	while (iter != this->correlationMap.end()) {
 		if (iter->first != this->genre) {
-			correlationFactors[iter->first] = (float)iter->second / (float)sum * 100.0;
+			//Had to introduce a normalization aspect in order to account for some genres just being absurdly popular
+			correlationFactors[iter->first] = (float)iter->second / (float)sum / (initializedGenres[iter->first].returnPopularity()/5) * 100000.0;
 		}
 		iter++;
 	}
@@ -88,6 +91,9 @@ map<string, float>* Genre::returnMostLinkedGenres() {
 }
 vector<Genre*> Genre::returnMostCompatibleGenres() {
 	return mostCompatibleGenres;
+}
+string Genre::returnGenre() {
+	return genre;
 }
 bool Genre::returnVisited() {
 	return visited;

@@ -11,13 +11,14 @@ public:
 	Genre();
 	Genre(string genre);
 	void AddCorrelation(string linkedGenre);
-	void GenerateCorrelationFactors();
+	void GenerateCorrelationFactors(map<string, Genre>& initializedGenres);
 	void GenerateRankedCorrelationFactors();
 	void initializeCompatibleGenre(Genre* compatibleGenre);
 	map<string, int>* returnCorrelations();
 	map<string, float>* returnCorrelationFactors();
 	map<string, float>* returnMostLinkedGenres();
 	vector<Genre*> returnMostCompatibleGenres();
+	string returnGenre();
 	bool returnVisited();
 	void enableVisited();
 	void disableVisited();

@@ -8,6 +8,7 @@
 #include <unordered_map>
 
 #include "Genre.h"
+#include "GraphSearch.h"
 
 using namespace::std;
 
@@ -28,7 +29,7 @@ int main() {
 	using namespace::std;
 
 	//setting up file to be opened
-	string fileName = "HR_genres.json";
+	string fileName = "data/HR_genres.json";
 	ifstream file;
 	file.open(fileName);
 
@@ -83,18 +84,29 @@ int main() {
 		//Creating a graph with correlation factors
 		auto iter = initializedGenres.begin();
 		while (iter != initializedGenres.end()) {
-			iter->second.GenerateCorrelationFactors();
+			iter->second.GenerateCorrelationFactors(initializedGenres);
 			iter->second.GenerateRankedCorrelationFactors();
-			map<string, float> temp = *(iter->second.returnCorrelationFactors());
+			map<string, float> temp = *(iter->second.returnMostLinkedGenres());
 
 			// create graph
 			auto babyIter = temp.begin();
 			while (babyIter != temp.end()) {
+				//cout << babyIter->first;
 				iter->second.initializeCompatibleGenre(&initializedGenres[babyIter->first]);
 				babyIter++;
 			}
+			//cout << endl;
 
-
+			//list of linked genres
+			temp = *(iter->second.returnMostLinkedGenres());
+			auto babyIter2 = temp.begin();
+			cout << iter->first << ": ";
+			while (babyIter2 != temp.end()) {
+				cout << babyIter2->first << "(" << babyIter2->second << ")" << ", ";
+				babyIter2++;
+			}
+			cout << endl;
+			iter++;
 			
 			/*auto babyIter = temp.begin();
 			cout << iter->first << ": ";
@@ -103,8 +115,8 @@ int main() {
 				babyIter++;
 			}
 			cout << endl;
-
-			temp = *(iter->second.returnMostLinkedGenres());
+			*/
+			/*auto temp = *(iter->second.returnMostLinkedGenres());
 			auto babyIter2 = temp.begin();
 			cout << iter->first << ": ";
 			while (babyIter2 != temp.end()) {
@@ -113,6 +125,19 @@ int main() {
 			}
 			cout << endl;
 			iter++;*/
+		}
+		//search graph
+		bool cycle = true;
+		while (cycle) {
+			string startGenre;
+			string endGenre;
+			cout << "BFS enter starting genre" << endl;
+			getline(cin, startGenre);
+			cout << "BFS enter target genre" << endl;
+			getline(cin, endGenre);
+
+			GraphSearch temp = GraphSearch(&initializedGenres[startGenre]);
+			cout << "Distance" << temp.breadthFirstSearch(endGenre) << endl;
 		}
 
 

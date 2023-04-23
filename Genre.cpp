@@ -26,7 +26,7 @@ void Genre::AddCorrelation(string linkedGenre) {
 
 void Genre::GenerateCorrelationFactors(map<string, Genre> &initializedGenres) {
 	//purely for flavor, doesn't really change much asides from eliminating its own genre from the pool which could be doen without converting ints to floats, also finds a given genres popularity
-	cout << setprecision(5) << endl;
+	cout << setprecision(5);
 	auto iter = this->correlationMap.begin();
 	float sum = 0;
 	while (iter != this->correlationMap.end()) {
@@ -49,7 +49,7 @@ void Genre::GenerateCorrelationFactors(map<string, Genre> &initializedGenres) {
 void Genre::GenerateRankedCorrelationFactors() {
 
 	auto iter = correlationFactors.begin();
-	int size = 5;
+	int size = 4;
 	vector<float> rankedArray(size, 0.0);
 	vector<string> rankedGenres(size, "");
 	float min = rankedArray[0];

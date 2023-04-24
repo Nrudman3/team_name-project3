@@ -14,14 +14,13 @@ public:
 	void GenerateCorrelationFactors(map<string, Genre>& initializedGenres);
 	void GenerateRankedCorrelationFactors();
 	void initializeCompatibleGenre(Genre* compatibleGenre);
+	void initializeRecommendationCorrelationFactors(string targetGenre, float weight);
 	map<string, int>* returnCorrelations();
 	map<string, float>* returnCorrelationFactors();
 	map<string, float>* returnMostLinkedGenres();
+	map<string, float>* returnRecommendedationCorrelationFactors();
 	vector<Genre*> returnMostCompatibleGenres();
 	string returnGenre();
-	bool returnVisited();
-	void enableVisited();
-	void disableVisited();
 	int returnPopularity();
 
 private:
@@ -31,6 +30,8 @@ private:
 	map<string, int> correlationMap;
 	map<string, float> correlationFactors;
 	map<string, float> mostRelatedGenres;
+	//final map utilized to suggest recommendations
+	map<string, float> recommendationCorrelationFactors;
 	vector<Genre*> mostCompatibleGenres;
 };
 

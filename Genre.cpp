@@ -26,7 +26,7 @@ void Genre::AddCorrelation(string linkedGenre) {
 
 void Genre::GenerateCorrelationFactors(map<string, Genre> &initializedGenres) {
 	//purely for flavor, doesn't really change much asides from eliminating its own genre from the pool which could be doen without converting ints to floats, also finds a given genres popularity
-	cout << setprecision(5) << endl;
+	cout << setprecision(5);
 	auto iter = this->correlationMap.begin();
 	float sum = 0;
 	while (iter != this->correlationMap.end()) {
@@ -49,7 +49,7 @@ void Genre::GenerateCorrelationFactors(map<string, Genre> &initializedGenres) {
 void Genre::GenerateRankedCorrelationFactors() {
 
 	auto iter = correlationFactors.begin();
-	int size = 5;
+	int size = 4;
 	vector<float> rankedArray(size, 0.0);
 	vector<string> rankedGenres(size, "");
 	float min = rankedArray[0];
@@ -80,6 +80,10 @@ void Genre::initializeCompatibleGenre(Genre* compatibleGenre) {
 	this->mostCompatibleGenres.push_back(compatibleGenre);
 }
 
+void Genre::initializeRecommendationCorrelationFactors(string targetGenre, float weight) {
+	recommendationCorrelationFactors[targetGenre] = weight;
+}
+
 map<string, int>* Genre::returnCorrelations() {
 	return &correlationMap;
 }
@@ -89,20 +93,14 @@ map<string, float>* Genre::returnCorrelationFactors() {
 map<string, float>* Genre::returnMostLinkedGenres() {
 	return &mostRelatedGenres;
 }
+map<string, float>* Genre::returnRecommendedationCorrelationFactors() {
+	return &recommendationCorrelationFactors;
+}
 vector<Genre*> Genre::returnMostCompatibleGenres() {
 	return mostCompatibleGenres;
 }
 string Genre::returnGenre() {
 	return genre;
-}
-bool Genre::returnVisited() {
-	return visited;
-}
-void Genre::enableVisited() {
-	this->visited = true;
-}
-void Genre::disableVisited() {
-	this->visited = false;
 }
 int Genre::returnPopularity() {
 	return this->popularity;

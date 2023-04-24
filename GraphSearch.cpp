@@ -10,18 +10,20 @@ GraphSearch::GraphSearch() {
 GraphSearch::GraphSearch(Genre* rootGenre) {
 	this->rootGenre = *rootGenre;
 }
-int GraphSearch::breadthFirstSearch(string targetGenre) {
-	int distance = 0;
+float GraphSearch::breadthFirstSearch(string targetGenre) {
+	if (rootGenre.returnGenre() == targetGenre) {
+		return -1.0;
+	}
 	queue<Genre> q;
-	map<string, bool> visited;
+	map<string, float> visited;
 	q.push(rootGenre);
-	visited[rootGenre.returnGenre()] = true;
+	visited[rootGenre.returnGenre()] = 1.0;
 
 	while (!q.empty()) {
 		Genre curr = q.front();
-		cout << curr.returnGenre() << endl;
+		//cout << curr.returnGenre() << endl;
 		if (targetGenre == curr.returnGenre()) {
-			return distance;
+			return visited[curr.returnGenre()];
 		}
 		q.pop();
 		vector<Genre*> mostCompatibleGenres = curr.returnMostCompatibleGenres();
@@ -29,38 +31,39 @@ int GraphSearch::breadthFirstSearch(string targetGenre) {
 			Genre adj = *mostCompatibleGenres[i];
 			string adjString = adj.returnGenre();
 			if (!visited[adjString]) {
-				distance++;
-				visited[adjString] = true;
+				visited[adjString] = visited[curr.returnGenre()] + 1.0;
 				q.push(adj);
 			}
 		}
 	}
-	return 0;
+	return -1.0;
 }
-int GraphSearch::depthFirstSearch(string targetGenre) {
-	int distance = 0;
+float GraphSearch::depthFirstSearch(string targetGenre) {
+	float min = -1.0;
 	stack<Genre> s;
-	map<string, bool> visited;
+	map<string, float> visited;
 	s.push(rootGenre);
-	visited[rootGenre.returnGenre()] = true;
-
+	visited[rootGenre.returnGenre()] = -1.0;
 	while (!s.empty()) {
 		Genre curr = s.top();
-		cout << curr.returnGenre() << endl;
+		//cout << "TARGET " << targetGenre << " VS " << curr.returnGenre() << endl;
 		if (targetGenre == curr.returnGenre()) {
-			return distance;
+			//cout << "MATCH" << endl;
+			if (min == -1.0)
+				min = visited[curr.returnGenre()];
+			else if (visited[curr.returnGenre()] < min)
+				min = visited[curr.returnGenre()];
 		}
 		s.pop();
 		vector<Genre*> mostCompatibleGenres = curr.returnMostCompatibleGenres();
 		for (int i = 0; i < mostCompatibleGenres.size(); i++) {
 			Genre adj = *mostCompatibleGenres[i];
 			string adjString = adj.returnGenre();
-			if (!visited[adjString]) {
-				distance++;
-				visited[adjString] = true;
+			if ((!visited[adjString] || adjString == targetGenre) && (visited[curr.returnGenre()] < min || min == -1.0)) {
+				visited[adjString] = visited[curr.returnGenre()] + 1.0;
 				s.push(adj);
 			}
 		}
 	}
-	return 0;
+	return min;
 }

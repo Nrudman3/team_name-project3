@@ -49,7 +49,7 @@ void Genre::GenerateCorrelationFactors(map<string, Genre> &initializedGenres) {
 void Genre::GenerateRankedCorrelationFactors() {
 
 	auto iter = correlationFactors.begin();
-	int size = 4;
+	int size = 5;
 	vector<float> rankedArray(size, 0.0);
 	vector<string> rankedGenres(size, "");
 	float min = rankedArray[0];

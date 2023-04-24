@@ -113,21 +113,20 @@ void recommendedGenres(map<string, Genre>& initializedGenres) {
 		getline(cin, currGenre);
 	}
 	cout << "\nCalculating recommendations...\n\n";
-	map<string, float> userRecommendations = dFS(&userGenres, initializedGenres);
-	cout << "Recommendations(DFS): \n";
+	map<string, float> userRecommendations = bFS(&userGenres, initializedGenres);
+	cout << "Recommendations: \n";
 	auto iter = userRecommendations.begin();
 	while (iter != userRecommendations.end()) {
 		cout << "Genre : " << iter->first << "\nRCF: " << iter->second << endl;
 		iter++;
 	}
 
-	userRecommendations = bFS(&userGenres, initializedGenres);
-	cout << "Recommendations(BFS): \n";
-	iter = userRecommendations.begin();
+	userRecommendations = dFS(&userGenres, initializedGenres);
+	/*iter = userRecommendations.begin();
 	while (iter != userRecommendations.end()) {
 		cout << "Genre : " << iter->first << "\nRCF: " << iter->second << endl;
 		iter++;
-	}
+	}*/
 	
 }
 

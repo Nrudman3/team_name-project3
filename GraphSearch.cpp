@@ -41,29 +41,37 @@ float GraphSearch::breadthFirstSearch(string targetGenre) {
 float GraphSearch::depthFirstSearch(string targetGenre) {
 	float min = -1.0;
 	stack<Genre> s;
+	stack<float> depth;
 	map<string, float> visited;
 	s.push(rootGenre);
-	visited[rootGenre.returnGenre()] = -1.0;
+	depth.push(1.0);
+	visited[rootGenre.returnGenre()] = 1.0;
 	while (!s.empty()) {
 		Genre curr = s.top();
+		float currDepth = depth.top();
+		//cout << "DEPTH " << currDepth << endl;
 		//cout << "TARGET " << targetGenre << " VS " << curr.returnGenre() << endl;
 		if (targetGenre == curr.returnGenre()) {
 			//cout << "MATCH" << endl;
 			if (min == -1.0)
-				min = visited[curr.returnGenre()];
+				min = currDepth;// visited[curr.returnGenre()];
 			else if (visited[curr.returnGenre()] < min)
-				min = visited[curr.returnGenre()];
+				min = currDepth;// visited[curr.returnGenre()];
 		}
+		depth.pop();
 		s.pop();
 		vector<Genre*> mostCompatibleGenres = curr.returnMostCompatibleGenres();
 		for (int i = 0; i < mostCompatibleGenres.size(); i++) {
 			Genre adj = *mostCompatibleGenres[i];
 			string adjString = adj.returnGenre();
-			if ((!visited[adjString] || adjString == targetGenre) && (visited[curr.returnGenre()] < min || min == -1.0)) {
+			if ((!visited[adjString] || adjString == targetGenre) && (visited[curr.returnGenre()] <= min || min == -1.0)) {
 				visited[adjString] = visited[curr.returnGenre()] + 1.0;
 				s.push(adj);
+				depth.push(currDepth + 1.0);
 			}
+			
 		}
+		
 	}
 	return min;
 }

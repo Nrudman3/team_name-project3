@@ -33,7 +33,78 @@ string operationSelect() {
 	return opChoice;
 }
 
-void genrePopularity(int mostLeast) {
+void genrePopularity(map<string, Genre>& initializedGenres, int mostLeast, int dataPoints) {
+	string maxGenre = "";
+	int max = 0;
+	auto iter = initializedGenres.begin();
+	if (mostLeast == 1) {
+		while (iter != initializedGenres.end()) {
+			if (iter->second.returnPopularity() > max) {
+				max = iter->second.returnPopularity();
+				maxGenre = iter->second.returnGenre();
+			}
+			iter++;
+		}
+		cout << "Most popular genre: " << maxGenre << " with " << max << " listeners (" << (float)max / (float)dataPoints * 100.0 << "%)\n";
+	}
+	else {
+		while (iter != initializedGenres.end()) {
+			if (iter->second.returnPopularity() < max) {
+				max = iter->second.returnPopularity();
+				maxGenre = iter->second.returnGenre();
+			}
+			iter++;
+		}
+		cout << "Least popular genre: " << maxGenre << " with " << max << " listeners (" << (float)max / (float)dataPoints * 100.0 << "%)\n";
+	}
+
+}
+
+vector<string> sortMostRecommended(map<string, float>& recommendedGenres, int amount) {
+	vector<string> orderedRecommended;
+	vector<float> weightRecommended;
+	for (int i = 0; i < amount; i++) {
+		orderedRecommended.push_back("");
+		weightRecommended.push_back(0);
+	}
+	int minLocation = 0;
+	float min = 0;
+	auto iter = recommendedGenres.begin();
+	while (iter != recommendedGenres.end()) {
+		min = weightRecommended[0];
+		minLocation = 0;
+		for (int i = 0; i < amount; i++) {
+			if (weightRecommended[i] < min) {
+				min =weightRecommended[i];
+				minLocation = i;
+			}
+		}
+		if (iter->second > min) {
+			weightRecommended[minLocation] = iter->second;
+			orderedRecommended[minLocation] = iter->first;
+		}
+		iter++;
+	}
+	//sorting algorithm to organize list
+	float max = 0;
+	int maxLocation = 0;
+	for (int i = 0; i < amount; i++) {
+		max = weightRecommended[i];
+		maxLocation = i;
+		for (int j = i; j < amount; j++) {
+			if (max < weightRecommended[j]) {
+				max = weightRecommended[j];
+				maxLocation = j;
+			}
+			float temp = weightRecommended[i];
+			string tempString = orderedRecommended[i];
+			weightRecommended[i] = max;
+			orderedRecommended[i] = orderedRecommended[maxLocation];
+			weightRecommended[maxLocation] = temp;
+			orderedRecommended[maxLocation] = tempString;
+		}
+	}
+
 
 }
 
@@ -306,9 +377,9 @@ int main() {
 	while (cycle) {
 		string opChoice = operationSelect();
 		if (opChoice == "1")
-			genrePopularity(1);
+			genrePopularity(initializedGenres, 1, dataPoints);
 		else if (opChoice == "2")
-			genrePopularity(-1);
+			genrePopularity(initializedGenres, -1, dataPoints);
 		else if (opChoice == "3")
 			recommendedGenres(initializedGenres);
 		else if (opChoice == "4")
